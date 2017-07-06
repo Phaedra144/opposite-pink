@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +23,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -169,12 +171,21 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
                     (android.provider.MediaStore.Audio.Media._ID);
             int artistColumn = musicCursor.getColumnIndex
                     (android.provider.MediaStore.Audio.Media.ARTIST);
-            //add songs to list
+            int alarmColumn = musicCursor.getColumnIndex
+                    (MediaStore.Audio.Media.IS_ALARM);
+            int notifiColumn = musicCursor.getColumnIndex
+                    (MediaStore.Audio.Media.IS_NOTIFICATION);
+            int ringtoneColumn = musicCursor.getColumnIndex
+                    (MediaStore.Audio.Media.IS_RINGTONE);
             do {
-                long thisId = musicCursor.getLong(idColumn);
-                String thisTitle = musicCursor.getString(titleColumn);
-                String thisArtist = musicCursor.getString(artistColumn);
-                songList.add(new Song(thisId, thisTitle, thisArtist));
+                if(!"16".equals(musicCursor.getString(ringtoneColumn)) &&
+                        !"18".equals(musicCursor.getString(alarmColumn)) &&
+                        !"19".equals(musicCursor.getString(notifiColumn))){
+                    long thisId = musicCursor.getLong(idColumn);
+                    String thisTitle = musicCursor.getString(titleColumn);
+                    String thisArtist = musicCursor.getString(artistColumn);
+                    songList.add(new Song(thisId, thisTitle, thisArtist));
+                }
             }
             while (musicCursor.moveToNext());
         }
