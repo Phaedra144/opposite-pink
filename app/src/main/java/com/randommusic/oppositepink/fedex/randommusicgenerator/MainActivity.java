@@ -22,11 +22,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.MediaController.MediaPlayerControl;
+import android.widget.Toast;
 
 /*
  * This is demo code to accompany the Mobiletuts+ series:
@@ -332,4 +334,19 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+            Toast.makeText(this, "Volume Up", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+            Toast.makeText(this, "Volume Down", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 }
