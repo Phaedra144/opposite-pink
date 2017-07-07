@@ -322,18 +322,15 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            //sleeper.setSleep(this);
+        if (id == R.id.nav_sleep) {
             sleeper.setSleep2(this);
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_timer) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_shuffle) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_mood) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_exit) {
 
         }
 
