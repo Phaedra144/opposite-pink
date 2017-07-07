@@ -323,9 +323,9 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
         int id = item.getItemId();
 
         if (id == R.id.nav_sleep) {
-            sleeper.setSleep2(this);
+            sleeper.setSleep(this);
         } else if (id == R.id.nav_timer) {
-
+            sleeper.setSleep2(this);
         } else if (id == R.id.nav_shuffle) {
 
         } else if (id == R.id.nav_mood) {
