@@ -149,6 +149,9 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
             case R.id.action_shuffle:
                 musicSrv.setShuffle();
                 break;
+            case R.id.action_moodshuffle:
+                musicSrv.setMoodShuffle();
+                break;
             case R.id.action_end:
                 stopService(playIntent);
                 musicSrv = null;

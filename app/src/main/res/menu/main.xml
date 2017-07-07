@@ -7,9 +7,17 @@
 		android:showAsAction="always"
 		android:title="Shuffle"/>
 	<item
+		android:id="@+id/action_moodshuffle"
+		android:icon="@drawable/rand"
+		android:orderInCategory="2"
+		android:showAsAction="always"
+		android:title="Mood Shuffle"/>
+
+
+	<item
 		android:id="@+id/action_end"
 		android:icon="@drawable/end"
-		android:orderInCategory="2"
+		android:orderInCategory="3"
 		android:showAsAction="always"
 		android:title="End"/>
 

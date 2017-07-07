@@ -36,6 +36,10 @@ public class MusicService extends Service implements
     private MediaPlayer player;
     //song list
     private ArrayList<Song> songs;
+
+    //skipped song list
+    private ArrayList<Song> skippedSongs = new ArrayList<>();
+
     //current position
     private int songPosn;
     //binder
@@ -46,7 +50,9 @@ public class MusicService extends Service implements
     private static final int NOTIFY_ID = 1;
     //shuffle flag and random
     private boolean shuffle = false;
+    private boolean moodShuffle = false;
     private Random rand;
+    private int counter = 0;
 
     public void onCreate() {
         //create the service
@@ -75,17 +81,15 @@ public class MusicService extends Service implements
     //pass song list
     public void setList(ArrayList<Song> theSongs) {
         songs = theSongs;
-        for (Song song : songs) {
-            try {
-                Log.d("path", song.getPath());
-                Mp3File mp3file = new Mp3File(song.getPath());
-                Log.d("genre", String.valueOf(mp3file.getId3v1Tag().getGenre()));
-            } catch (IOException|UnsupportedTagException|InvalidDataException e) {
-                Log.e("file creation", e.getMessage());
-            } catch (NullPointerException e) {
-                Log.e("tag", "no tag found");
-            }
-        }
+//        for (Song song : songs) {
+//            try {
+//                Mp3File mp3file = new Mp3File(song.getPath());
+//            } catch (IOException|UnsupportedTagException|InvalidDataException e) {
+//                Log.e("file creation", e.getMessage());
+//            } catch (NullPointerException e) {
+//                Log.e("tag", "no tag found");
+//            }
+//        }
     }
 
     //binder
@@ -215,11 +219,29 @@ public class MusicService extends Service implements
                 newSong = rand.nextInt(songs.size());
             }
             songPosn = newSong;
+        } else if (moodShuffle) {
+            int newSong = songPosn;
+            Song song = songs.get(songPosn);
+            skippedSongs.add(song);
+            do {
+                newSong = rand.nextInt(songs.size());
+                Song toBePlayed = songs.get(newSong);
+                if (skippedSongs.contains(toBePlayed)) {
+                    songPosn = newSong;
+                }
+            } while (newSong == songPosn);
+            songPosn = newSong;
+            counter++;
+            if (counter >= songs.size()/3) {
+                skippedSongs.remove(0);
+            }
         } else {
             songPosn++;
             if (songPosn >= songs.size()) songPosn = 0;
         }
         playSong();
+
+
     }
 
     @Override
@@ -231,6 +253,12 @@ public class MusicService extends Service implements
     public void setShuffle() {
         if (shuffle) shuffle = false;
         else shuffle = true;
+    }
+
+    //toggle moodshuffle
+    public void setMoodShuffle() {
+        if (moodShuffle) moodShuffle = false;
+        else moodShuffle = true;
     }
 
 }
