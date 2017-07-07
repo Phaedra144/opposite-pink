@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +23,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -165,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
         //iterate over results if valid
         if (musicCursor != null && musicCursor.moveToFirst()) {
             //get columns
+            int pathColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
             int titleColumn = musicCursor.getColumnIndex
                     (android.provider.MediaStore.Audio.Media.TITLE);
             int idColumn = musicCursor.getColumnIndex
@@ -174,9 +177,10 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
             //add songs to list
             do {
                 long thisId = musicCursor.getLong(idColumn);
+                String path = musicCursor.getString(pathColumn);
                 String thisTitle = musicCursor.getString(titleColumn);
                 String thisArtist = musicCursor.getString(artistColumn);
-                songList.add(new Song(thisId, thisTitle, thisArtist));
+                songList.add(new Song(thisId, thisTitle, thisArtist, path));
             }
             while (musicCursor.moveToNext());
         }
