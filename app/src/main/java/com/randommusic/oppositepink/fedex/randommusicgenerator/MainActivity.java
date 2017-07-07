@@ -22,6 +22,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +40,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements MediaPlayerControl, NavigationView.OnNavigationItemSelectedListener {
 
+    private Sleeper sleeper;
     //song list variables
     private ArrayList<Song> songList;
     private ListView songView;
@@ -54,6 +56,9 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
 
     //activity and playback pause flags
     private boolean paused = false, playbackPaused = false;
+
+    private boolean shortPress = false;
+    private long lastVolumeUpPressingDown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
+        sleeper  = new Sleeper();
         //retrieve list view
         songView = (ListView) findViewById(R.id.song_list);
         //instantiate list
@@ -130,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
             setController();
             playbackPaused = false;
         }
-        controller.show(0);
+        controller.show(4000);
     }
 
     @Override
@@ -247,6 +252,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
     //set the controller up
     private void setController() {
         controller = new MusicController(this);
+
         //set previous and next button listeners
         controller.setPrevNextListeners(new View.OnClickListener() {
             @Override
@@ -271,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
             setController();
             playbackPaused = false;
         }
-        controller.show(0);
+        controller.show(4000);
     }
 
     private void playPrev() {
@@ -280,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
             setController();
             playbackPaused = false;
         }
-        controller.show(0);
+        controller.show(4000);
     }
 
     @Override
@@ -317,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
         int id = item.getItemId();
 
         if (id == R.id.nav_sleep) {
-            // Handle the camera action
+            sleeper.setSleep2(this);
         } else if (id == R.id.nav_timer) {
 
         } else if (id == R.id.nav_shuffle) {
@@ -333,18 +339,16 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
         return true;
     }
 
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP){
-            Toast.makeText(this, "Volume Up", Toast.LENGTH_SHORT).show();
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            playNext();
             return true;
         }
 
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
-            Toast.makeText(this, "Volume Down", Toast.LENGTH_SHORT).show();
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            playPrev();
             return true;
         }
         return super.onKeyDown(keyCode, event);
     }
-
 }
