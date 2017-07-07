@@ -2,6 +2,8 @@ package com.randommusic.oppositepink.fedex.randommusicgenerator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import android.app.Notification;
@@ -53,6 +55,7 @@ public class MusicService extends Service implements
     private boolean moodShuffle = false;
     private Random rand;
     private int counter = 0;
+    private Map<String, Integer> skippedGenres = new HashMap<>();
 
     public void onCreate() {
         //create the service
@@ -63,6 +66,8 @@ public class MusicService extends Service implements
         rand = new Random();
         //create player
         player = new MediaPlayer();
+
+        skippedGenres.put("", 0);
         //initialize
         initMusicPlayer();
     }
@@ -81,15 +86,6 @@ public class MusicService extends Service implements
     //pass song list
     public void setList(ArrayList<Song> theSongs) {
         songs = theSongs;
-//        for (Song song : songs) {
-//            try {
-//                Mp3File mp3file = new Mp3File(song.getPath());
-//            } catch (IOException|UnsupportedTagException|InvalidDataException e) {
-//                Log.e("file creation", e.getMessage());
-//            } catch (NullPointerException e) {
-//                Log.e("tag", "no tag found");
-//            }
-//        }
     }
 
     //binder
@@ -222,23 +218,52 @@ public class MusicService extends Service implements
         } else if (moodShuffle) {
             int newSong = songPosn;
             Song song = songs.get(songPosn);
+            try {
+                Mp3File mp3file = new Mp3File(song.getPath());
+                String genre = String.valueOf(mp3file.getId3v1Tag().getGenre());
+                int countOfSkip = skippedGenres.get(genre);
+                if (countOfSkip != 0) {
+                    countOfSkip++;
+                    skippedGenres.put(genre, countOfSkip);
+                }
+            } catch (IOException | UnsupportedTagException | InvalidDataException e) {
+                Log.e("file creation", e.getMessage());
+            } catch (NullPointerException e) {
+                Log.e("tag", "no tag found");
+            }
             skippedSongs.add(song);
+            int whileCounter = 0;
             do {
                 newSong = rand.nextInt(songs.size());
                 Song toBePlayed = songs.get(newSong);
+                String genre = "";
+                try {
+                    Mp3File mp3 = new Mp3File(toBePlayed.getPath());
+                    genre = String.valueOf(mp3.getId3v1Tag().getGenre());
+                } catch (IOException | UnsupportedTagException | InvalidDataException e) {
+                    Log.e("file creation", e.getMessage());
+                } catch (NullPointerException e) {
+                    Log.e("tag", "no tag found");
+                }
                 if (skippedSongs.contains(toBePlayed)) {
+                    if (skippedGenres.containsKey(genre) && skippedGenres.get(genre) >= 3) {
+                        whileCounter ++;
+                    }
                     songPosn = newSong;
                 }
-            } while (newSong == songPosn);
+            } while (newSong == songPosn && whileCounter <= 3);
             songPosn = newSong;
             counter++;
-            if (counter >= songs.size()/3) {
+            if (counter >= songs.size() / 3) {
                 skippedSongs.remove(0);
             }
-        } else {
+        } else
+
+        {
             songPosn++;
             if (songPosn >= songs.size()) songPosn = 0;
         }
+
         playSong();
 
 
