@@ -73,7 +73,7 @@ public class Sleeper {
         final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
         final int minute = mcurrentTime.get(Calendar.MINUTE);
         TimePickerDialog mTimePicker;
-        mTimePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+        mTimePicker = new TimePickerDialog(context,R.style.DialogTheme, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 time = selectedHour * 60 + selectedMinute;
@@ -84,18 +84,9 @@ public class Sleeper {
                 }
                 StartSleep(n*60);
         Toast.makeText(context,"Sleep " + String.valueOf(n) + "mins", Toast.LENGTH_SHORT).show();
-//                Toast.makeText(context,"hour " + selectedHour + "mins " + selectedMinute, Toast.LENGTH_SHORT).show();
             }
         }, hour, minute, true);//Yes 24 hour time
         mTimePicker.setTitle("Select Time");
         mTimePicker.show();
-
-//        int currTime = hour * 60 + minute;
-//        int n = time - currTime;
-//        if(time < currTime){
-//            n = 24 * 60 - n;
-//        }
-//        StartSleep(n*60);
-////        Toast.makeText(context,"Sleep " + String.valueOf(n) + "mins", Toast.LENGTH_SHORT).show();
     }
 }
