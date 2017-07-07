@@ -318,7 +318,8 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            sleeper.setSleep(this);
+            //sleeper.setSleep(this);
+            sleeper.setSleep2(this);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
