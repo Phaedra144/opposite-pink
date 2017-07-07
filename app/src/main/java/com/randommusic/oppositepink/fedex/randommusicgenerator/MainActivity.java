@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements MediaPlayerControl, NavigationView.OnNavigationItemSelectedListener {
 
+    private Sleeper sleeper;
     //song list variables
     private ArrayList<Song> songList;
     private ListView songView;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
+        sleeper  = new Sleeper();
         //retrieve list view
         songView = (ListView) findViewById(R.id.song_list);
         //instantiate list
@@ -317,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            sleeper.setSleep(this);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
